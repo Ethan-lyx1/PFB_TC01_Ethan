@@ -2,48 +2,48 @@ from pathlib import Path
 import csv
 
 print (Path.cwd() )
+def PnL_analysis():
+    fp = Path.cwd() / "csv_reports" / "Profit_and_Loss.csv"
 
-fp = Path.cwd() / "csv_reports" / "Profit_and_Loss.csv"
+    with fp.open(mode="r", encoding="UTF-8", newline="") as file:
+        file_reader = csv.reader(file)
+        next(file_reader) # skip header
 
-with fp.open(mode="r", encoding="UTF-8", newline="") as file:
-    file_reader = csv.reader(file)
-    next(file_reader) # skip header
+        PnL_Records=[] 
 
-    PnL_Records=[] 
+        for row in file_reader:
+            day = int(row[0])
+            Net_Profit = float(row[4])  # Convert overhead value to a number
+            PnL_Records.append([day,Net_Profit])
+           
+            daily_PnL_difference = []
 
-    for row in file_reader:
-        day = int(row[0])
-        Net_Profit = float(row[4])
-        PnL_Records.append([day, Net_Profit])
+        for day_index in range(1, len(PnL_Records)):
+            previous_day_profit = PnL_Records[day_index - 1][1]
+            current_day_profit = PnL_Records[day_index][1]
+            difference = current_day_profit - previous_day_profit
+            daily_PnL_difference.append((PnL_Records [day_index][0], difference))  # Tuple of day and difference
+        
+        is_increasing = all(diff[1] > 0 for diff in daily_PnL_difference)
+        is_decreasing = all(diff[1] < 0 for diff in daily_PnL_difference)
+        def custom_sort(item):
+            return item[1]
 
-
-daily_net_profit_difference = []
-for day_index in range(len(PnL_Records) - 1):
-    current_day_profit = PnL_Records[day_index][1]    # Access the current day's net profit
-    next_day_profit = PnL_Records[day_index+1][1]    # Access the next day's net profit
-    difference = next_day_profit - current_day_profit     # Calculate the difference
-    daily_net_profit_difference.append(difference)    # Add the difference to the list
-
-print (daily_net_profit_difference)
-
-is_increasing = True # Initialize variables to track if the net profit is increasing or decreasing
-is_decreasing = True
-deficit_days = []
-
-# Analyze the trend of net profit and collect deficit days
-for day_index, diff in enumerate(daily_net_profit_difference):
-    if diff <= 0:
-        is_increasing = False  # If any day's profit is not increasing, then is_increasing is set to False
-    if diff >= 0:
-        is_decreasing = False  # If any day's profit is not decreasing, then is_decreasing is set to False
-    if diff < 0:
-        actual_day = PnL_Records[day_index + 1][0] # Since day_index starts from 0, corresponding to the difference between day 1 and day 2, add 1 to get the actual day number in PnL_Records
-        deficit_days.append((actual_day, diff))  # Store days with deficit
-
-def get_deficit_amount(record):
-    return record[1]
-
-# Sort deficit_days using the custom function
-deficit_days.sort(key=get_deficit_amount, reverse=True)
-
-print(deficit_days)
+        if is_increasing:
+            highest_increment = max (daily_PnL_difference)
+            return f' [NET PROFIT SURPLUS] NET PROFIT ON EACH DAY IS HIGHER THAN THE PREVIOUS DAY \n [HIGHEST NET PROFIT SURPLUS] DAY: {highest_increment [0]}, AMOUNT: SGD{highest_increment [1]}' 
+        elif is_decreasing:
+            lowest_increment = min (daily_PnL_difference)
+            return f' [NET PROFIT DEFICIT] CASH ON EACH DAY IS LOWER THAN THE PREVIOUS DAY \n [HIGHEST PROFIT DEFICIT] DAY: {lowest_increment [0]}, AMOUNT: SGD{lowest_increment [1]}' 
+        else:
+            deficit_days = [(day, diff) for day, diff in daily_PnL_difference if diff < 0]
+            deficit_days.sort(key=custom_sort)  # Sort by deficit amount
+            # Identify top three deficits
+            top_deficits = deficit_days[:3]
+            # Construct output lines with the required formatting
+            output_lines = [f"[CASH DEFICIT] DAY: {day}, AMOUNT: USD{abs(amount):.0f}" for day, amount in deficit_days]
+            # Add the top three separately with the required labeling
+            output_lines.append(f"[HIGHEST NET PROFIT DEFICIT] DAY: {top_deficits[0][0]}, AMOUNT: USD{abs(top_deficits[0][1]):.2f}")
+            output_lines.append(f"[2ND HIGHEST NET PROFIT DEFICIT] DAY: {top_deficits[1][0]}, AMOUNT: USD{abs(top_deficits[1][1]):.2f}")
+            output_lines.append(f"[3RD HIGHEST NET PROFIT DEFICIT] DAY: {top_deficits[2][0]}, AMOUNT: USD{abs(top_deficits[2][1]):.2f}")
+        return '\n'.join(output_lines)
