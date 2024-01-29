@@ -2,7 +2,7 @@ from pathlib import Path
 import csv
 
 def cash_on_hand_analysis():
-''' Function analyzes the Cash on hand (COH) data from a CSV file and reports on daily net profit changes.
+    ''' Function analyzes the Cash on Hand (COH) data from a CSV file and reports on daily net profit changes.
 
     This function reads data from 'Cash_on_Hand.csv' in the 'csv_reports' directory relative to the current working directory.
     It calculates the daily differences in cash on hand and identifies trends as consistently increasing, consistently decreasing, 
@@ -10,9 +10,10 @@ def cash_on_hand_analysis():
     or in the case of fluctuating trends, the top three cash deficits and every day that has a cash deficit.
 
     Returns:
-        str: A string summarizing the cash on hand analysis results in a readable format..'''
+        str: A string summarizing the cash on hand analysis results in a readable format.
+    '''
 
-    fp = Path.cwd() / "csv_reports" / "Cash_on_Hand.csv"  # Define the file path for the Cash_on_Hand csv file 
+    fp = Path.cwd() / "csv_reports" / "Cash_on_Hand.csv"  # Define the file path for the Cash_on_Hand csv file
 
     with fp.open(mode="r", encoding="UTF-8", newline="") as file: # Open CSV file as read in UTF-8 formatting 
         file_reader = csv.reader(file)
