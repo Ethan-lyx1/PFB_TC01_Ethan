@@ -52,9 +52,9 @@ def cash_on_hand_analysis():
             deficit_days = [(day, diff) for day, diff in daily_coh_difference if diff < 0]
             deficit_days.sort(key=custom_sort)  # Identify days with cash deficits and sort them using the custom sort created
             top_deficits = deficit_days[:3]  # Identify the top three deficits from deficit days
-            output_lines = [f"[CASH DEFICIT] DAY: {day}, AMOUNT: USD{abs(amount):.0f}" for day, amount in deficit_days] # Construct output lines for each deficit day with correct formatting using for loop
+            output_lines = [f"[CASH DEFICIT] DAY: {day}, AMOUNT: SGD{abs(amount):.0f}" for day, amount in deficit_days] # Construct output lines for each deficit day with correct formatting using for loop
             # Add the top three deficits separately with correct formatting
-            output_lines.append(f"[HIGHEST CASH DEFICIT] DAY: {top_deficits[0][0]}, AMOUNT: USD{abs(top_deficits[0][1]):.2f}")
-            output_lines.append(f"[2ND HIGHEST CASH DEFICIT] DAY: {top_deficits[1][0]}, AMOUNT: USD{abs(top_deficits[1][1]):.2f}")
-            output_lines.append(f"[3RD HIGHEST CASH DEFICIT] DAY: {top_deficits[2][0]}, AMOUNT: USD{abs(top_deficits[2][1]):.2f}")
+            output_lines.append(f"[HIGHEST CASH DEFICIT] DAY: {top_deficits[0][0]}, AMOUNT: SGD{abs(top_deficits[0][1]):.2f}")
+            output_lines.append(f"[2ND HIGHEST CASH DEFICIT] DAY: {top_deficits[1][0]}, AMOUNT: SGD{abs(top_deficits[1][1]):.2f}")
+            output_lines.append(f"[3RD HIGHEST CASH DEFICIT] DAY: {top_deficits[2][0]}, AMOUNT: SGD{abs(top_deficits[2][1]):.2f}")
         return '\n'.join(output_lines) # Combine the list of strings into a single string separated by a newline
