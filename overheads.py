@@ -34,4 +34,4 @@ def read_over_and_find_highest_overhead():
             highest_overhead = overhead_expense
             highest_category = category
 
-    return f'[HIGHEST OVERHEAD] {highest_category} : {highest_overhead} \n' #Return a formatted string with the category and the highest overhead
+    return f'[HIGHEST OVERHEAD] {highest_category} : {highest_overhead} % \n' #Return a formatted string with the category and the highest overhead
